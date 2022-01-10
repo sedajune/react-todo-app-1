@@ -1,0 +1,39 @@
+{
+  "name": "react-bare-bone-template",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "react-scripts build",
+    "spj": "npx sort-package-json@1.48 package.json",
+    "dev": "react-scripts start",
+    "stylelint": "stylelint 'src/*.{js,jsx}'"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.7.1",
+    "@emotion/styled": "^11.6.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  },
+  "devDependencies": {
+    "@stylelint/postcss-css-in-js": "^0.37.2",
+    "@stylelint/prettier-config": "^2.0.0",
+    "eslint": "^7.32.0",
+    "eslint-config-xo-react": "^0.25.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.25.2",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "postcss-pseudo-classes": "^0.2.1",
+    "postcss-syntax": "^0.36.2",
+    "prettier": "^2.5.1",
+    "react-scripts": "5.0.0",
+    "stylelint": "^14.1.0",
+    "stylelint-a11y": "^1.2.3",
+    "stylelint-config-prettier": "^9.0.3",
+    "stylelint-config-property-sort-order-smacss": "^8.0.0",
+    "stylelint-config-standard": "^24.0.0",
+    "stylelint-config-styled-components": "^0.1.1",
+    "stylelint-order": "^5.0.0",
+    "stylelint-processor-styled-components": "^1.10.0",
+    "xo": "^0.43.0"
+  }
+}
