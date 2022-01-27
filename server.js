@@ -1,12 +1,13 @@
 import cors from "cors";
 import express from "express";
+/*import mongoose from "mongoose";*/
 
 import dotenv from "dotenv";
 dotenv.config();
-
+import process from "node:process";
 import { readFile, writeFile } from "fs/promises";
-import { v4 as uuid } from "uuid";
-import { connectDatabase } from "./utils/database";
+
+import { connectDatabase, getTodoCollection } from "./utils/database.js";
 
 if (!process.env.MONGODB_URI) {
 	throw new Error("No MONGODB_URI available in dotenv");
@@ -39,10 +40,16 @@ app.get("/", (request, response) => {
 
 const DATABASE_URI = "./db.json";
 
-app.get("/api/todos", async (request, response) => {
-	const data = await readFile(DATABASE_URI, "utf8");
-	const json = JSON.parse(data);
-	response.json(json.todos);
+app.get("/api/todos", async (request, response, next) => {
+	try {
+		//const data = await readFile(DATABASE_URI, "utf8");
+		//const json = JSON.parse(data);
+		//response.json(json.todos);
+		const mongoDbResponse = await Todo.find();
+		response.send(mongoDbResponse);
+	} catch (error_) {
+		next(error_);
+	}
 });
 
 /*app.get("/api/todos", (request, response) => {
@@ -52,20 +59,26 @@ app.get("/api/todos", async (request, response) => {
 	]);
 });*/
 
-app.post("/api/todos", async (request, response) => {
-	const data = await readFile(DATABASE_URI, "utf8");
-	const json = JSON.parse(data);
+app.post("/api/todos", async (request, response, next) => {
+	try {
+		// const data = await readFile(DATABASE_URI, "utf8");
+		// const json = JSON.parse(data);
 
-	const todo = {
-		...request.body,
-		isChecked: false,
-		id: uuid(),
-	};
+		const collection = getTodoCollection();
 
-	json.todos.push(todo);
-	await writeFile(DATABASE_URI, JSON.stringify(json, null, 4));
-	response.status(201);
-	response.json(todo);
+		const newTodo = new Todo({
+			...request.body,
+			isCompleted: false,
+		});
+
+		const mongoDbResponse = await collection.insertOne(todo);
+
+		response
+			.status(201)
+			.send(`Insertion successful, document id:${mongoDbResponse.insertedId}`);
+	} catch (error_) {
+		next(error_);
+	}
 });
 
 app.delete("/api/todos", async (request, response) => {
@@ -116,3 +129,28 @@ connectDatabase(process.env.MONGODB_URI).then(() => {
     }
   ]
 } */
+
+/*// New code
+mongoose.connect(process.env.MONGODB_URI).then(() => {
+	app.listen(port, () => {
+		console.log(`Example app listening on port ${port}`);
+	});
+});
+
+
+app.post("/api/todos", async (request, response, next) => {
+	try {
+
+		const todo = new Todo {
+			...request.body,
+			isChecked: false,
+		};
+
+		const mongoDbResponse = await todo.save();
+
+
+		response.status(201).json(mongoDbResponse);
+	} catch (error_) {
+		next(error_);
+	}
+});*/
