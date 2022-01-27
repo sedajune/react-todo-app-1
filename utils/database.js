@@ -11,14 +11,18 @@ export function getTodoCollection() {
 	return client.db().collection(`todos`);
 }
 
-export function getCollection(name) {
-	return client.db().collection(name);
-}
+// Function assignment
 
-export function getTodoCollection() {
-	return getCollection(`todos`);
-}
+// export function getCollection(name) {
+//	return client.db().collection(name);
+// }
 
-export function getUserCollection() {
-	return getCollection(`users`);
-}
+// Alternate functions with more modularity
+
+// export function getTodoCollection() {
+//	return getCollection(`todos`);
+//}
+
+// export function getUserCollection() {
+//	return getCollection(`users`);
+// }

@@ -1,7 +1,16 @@
 import cors from "cors";
 import express from "express";
+
+import dotenv from "dotenv";
+dotenv.config();
+
 import { readFile, writeFile } from "fs/promises";
 import { v4 as uuid } from "uuid";
+import { connectDatabase } from "./utils/database";
+
+if (!process.env.MONGODB_URI) {
+	throw new Error("No MONGODB_URI available in dotenv");
+}
 
 const app = express();
 const port = 1263;
@@ -88,8 +97,10 @@ app.put("/api/todos", async (request, response) => {
 	response.send(json.todos[index]);
 });
 
-app.listen(port, () => {
-	console.log(`Example app listening on port ${port}`);
+connectDatabase(process.env.MONGODB_URI).then(() => {
+	app.listen(port, () => {
+		console.log(`Example app listening on port ${port}`);
+	});
 });
 
 /* {
