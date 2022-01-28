@@ -4,16 +4,12 @@ import express from "express";
 import mongoose from "mongoose";
 import Todo from "./models/todo.model.js";
 
-
-
 import dotenv from "dotenv";
 dotenv.config();
 import process from "node:process";
 import { readFile, writeFile } from "fs/promises";
 
-
 import { connectDatabase, getTodoCollection } from "./utils/database.js";
-
 
 if (!process.env.MONGODB_URI) {
 	throw new Error("No MONGODB_URI available in dotenv");
@@ -33,7 +29,6 @@ const DATABASE_URI = "./db.json";
 
 app.get("/api/todos", async (request, response, next) => {
 	try {
-
 		const todos = await Todo.find();
 		response.json(todos);
 
@@ -42,12 +37,10 @@ app.get("/api/todos", async (request, response, next) => {
 		//response.json(json.todos);
 		const mongoDbResponse = await Todo.find();
 		response.send(mongoDbResponse);
-
 	} catch (error_) {
 		next(error_);
 	}
 });
-
 
 app.post("/api/todos", async (request, response, next) => {
 	try {
@@ -60,32 +53,6 @@ app.post("/api/todos", async (request, response, next) => {
 		console.log(mongoDbResponse);
 
 		response.status(201).json(mongoDbResponse);
-
-/*app.get("/api/todos", (request, response) => {
-	response.json([
-		{ id: 1, name: "Buy plants" },
-		{ id: 2, name: "Buy cat" },
-	]);
-});*/
-
-app.post("/api/todos", async (request, response, next) => {
-	try {
-		// const data = await readFile(DATABASE_URI, "utf8");
-		// const json = JSON.parse(data);
-
-		const collection = getTodoCollection();
-
-		const newTodo = new Todo({
-			...request.body,
-			isCompleted: false,
-		});
-
-		const mongoDbResponse = await collection.insertOne(todo);
-
-		response
-			.status(201)
-			.send(`Insertion successful, document id:${mongoDbResponse.insertedId}`);
-
 	} catch (error_) {
 		next(error_);
 	}
@@ -134,52 +101,8 @@ app.put("/api/todos/:id", async (request, response, next) => {
 	}
 });
 
-
-mongoose.connect(process.env.MONGODB_URI).then(() => {
-
-connectDatabase(process.env.MONGODB_URI).then(() => {
-
-	app.listen(port, () => {
-		console.log(`Example app listening on port ${port}`);
-	});
-});
-
-/* {
-  "todos": [
-    { "id": 1, "name": "Clean the bathroom" },
-    { "id": 2, "name": "Clean the kitchen" },
-    { "id": 3, "name": "Clean the rug" },
-    { "id": 4, "name": "Clean the floor" },
-    {
-      "name": "Foo",
-      "done": false,
-      "id": "something-unique"
-    }
-  ]
-} */
-
-/*// New code
 mongoose.connect(process.env.MONGODB_URI).then(() => {
 	app.listen(port, () => {
 		console.log(`Example app listening on port ${port}`);
 	});
 });
-
-
-app.post("/api/todos", async (request, response, next) => {
-	try {
-
-		const todo = new Todo {
-			...request.body,
-			isChecked: false,
-		};
-
-		const mongoDbResponse = await todo.save();
-
-
-		response.status(201).json(mongoDbResponse);
-	} catch (error_) {
-		next(error_);
-	}
-});*/
-
